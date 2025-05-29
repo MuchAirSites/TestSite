@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dark Theme Stopwatch</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .stopwatch {
+      text-align: center;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #1e1e1e;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    .time {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+
+    .buttons button {
+      background-color: #333;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .buttons button:hover {
+      background-color: #555;
+    }
+
+    .buttons button:active {
+      background-color: #777;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stopwatch">
+  <div class="time" id="display">00:00:00.000</div>
+  <div class="buttons">
+    <button onclick="start()">Start</button>
+    <button onclick="stop()">Stop</button>
+    <button onclick="reset()">Reset</button>
+  </div>
+</div>
+
+<script>
+  let startTime;
+  let interval;
+  let running = false;
+
+  function start() {
+    if (running) return;
+    running = true;
+    startTime = Date.now() - (window.elapsed || 0);
+    interval = setInterval(updateTime, 10);
+  }
+
+  function stop() {
+    if (!running) return;
+    running = false;
+    clearInterval(interval);
+    window.elapsed = Date.now() - startTime;
+  }
+
+  function reset() {
+    running = false;
+    clearInterval(interval);
+    window.elapsed = 0;
+    document.getElementById('display').textContent = "00:00:00.000";
+  }
+
+  function updateTime() {
+    const now = Date.now();
+    const time = new Date(now - startTime);
+    const ms = String(time.getUTCMilliseconds()).padStart(3, '0');
+    const s = String(time.getUTCSeconds()).padStart(2, '0');
+    const m = String(time.getUTCMinutes()).padStart(2, '0');
+    const h = String(time.getUTCHours()).padStart(2, '0');
+    document.getElementById('display').textContent = `${h}:${m}:${s}.${ms}`;
+  }
+</script>
+
+</body>
+</html>
